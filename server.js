@@ -1,22 +1,34 @@
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+
 const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http, {
+const server = http.createServer(app);
+
+// 1. Tillat at videodating.no kobler seg til (CORS)
+const io = new Server(server, {
     cors: {
-        origin: "*", 
+        origin: ["https://videodating.no", "http://videodating.no", "https://www.videodating.no"],
         methods: ["GET", "POST"]
     }
 });
 
-let waitingUser = null; 
+// 2. Fjern "Cannot GET /" ved å legge til denne ruten
+app.get('/', (req, res) => {
+    res.send('Videodating Signal Server er oppe og kjører!');
+});
+
+let waitingUser = null;
 
 io.on('connection', (socket) => {
-    socket.on('find-partner', (peerId) => {
-        socket.peerId = peerId;
+    console.log('Bruker koblet til:', socket.id);
+
+    socket.on('find-partner', (myPeerId) => {
         if (waitingUser && waitingUser.id !== socket.id) {
-            console.log('Match funnet!');
-            waitingUser.emit('call-partner', peerId);
-            waitingUser = null; 
+            io.to(waitingUser.id).emit('call-partner', myPeerId);
+            socket.partner = waitingUser;
+            waitingUser.partner = socket;
+            waitingUser = null;
         } else {
             waitingUser = socket;
             socket.emit('waiting');
@@ -24,21 +36,23 @@ io.on('connection', (socket) => {
     });
 
     socket.on('next', () => {
-        if (waitingUser && waitingUser.id === socket.id) {
-            waitingUser = null; 
+        if (socket.partner) {
+            socket.partner.emit('partner-left');
+            socket.partner.partner = null;
+            socket.partner = null;
         }
-        socket.broadcast.emit('partner-left');
     });
 
     socket.on('disconnect', () => {
-        if (waitingUser && waitingUser.id === socket.id) {
-            waitingUser = null;
+        if (socket.partner) {
+            socket.partner.emit('partner-left');
+            socket.partner.partner = null;
         }
-        socket.broadcast.emit('partner-left');
+        if (waitingUser === socket) waitingUser = null;
     });
 });
 
 const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => {
-    console.log('Matchmaking-server kjører på port ' + PORT);
+server.listen(PORT, () => {
+    console.log(`Server kjører på port ${PORT}`);
 });
