@@ -13,10 +13,12 @@ const APP_HTML = `
     <title>Videodating</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-        body { background: #000 url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMhV4xfJT9JcJOzhhzvYhK9pdVs-URxBN_Ts3HeCHKf97_deUmV5oCPIRuszwxhPiRxL59y5_-A6Ng8dRfZp6r5jKJoO0JsmPquTPj4DKA9_UMOhxRZKsyJraxE_XWChxPZvI_MrVv44odm4NmxgkRheeBDEwxCS4KUY9CJIhok0tM05Lyii9kXGk0vZg/s1600/video-dating.jpg') no-repeat center center fixed; background-size: cover; color: white; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* Overlays (Velkomst, Info, Betaling) - Endret fra 0.85 (85% svart) til 0.3 (30% svart) og økt uskarphet */
-        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(10px); }
+        /* Oppdatert med et høyoppløselig premium-bilde fra Unsplash for å sikre et profesjonelt utseende */
+        body { background: #000 url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed; background-size: cover; color: white; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+        
+        /* Overlays (Velkomst, Info, Betaling) - Blur redusert til 5px for å vise bildekvaliteten */
+        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(5px); }
         .box { background: rgba(17, 17, 17, 0.85); padding: 30px; border-radius: 20px; border: 1px solid #333; max-width: 420px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin: auto; }
         .box h1 { color: #58cc02; margin-bottom: 15px; font-size: 26px; }
         .box p { font-size: 15px; color: #ccc; margin-bottom: 20px; line-height: 1.5; }
