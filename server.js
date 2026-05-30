@@ -20,9 +20,13 @@ const APP_HTML = `
         .box { background: #111; padding: 30px; border-radius: 20px; border: 1px solid #333; max-width: 400px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
         .box h1 { color: #ff3b30; margin-bottom: 15px; font-size: 24px; }
         .box p { font-size: 16px; color: #ccc; margin-bottom: 25px; line-height: 1.5; }
-        .btn-primary { background: #58cc02; color: #000; font-weight: bold; border: none; padding: 15px 30px; border-radius: 30px; font-size: 18px; cursor: pointer; width: 100%; margin-bottom: 10px; }
-        .btn-vip { background: linear-gradient(45deg, #FFD700, #FFA500); color: #000; font-weight: bold; border: none; padding: 15px 30px; border-radius: 30px; font-size: 18px; cursor: pointer; width: 100%; margin-bottom: 10px; }
-        .vip-input { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 18px; text-align: center; margin-bottom: 15px; outline: none; }
+        
+        .btn-primary { background: #58cc02; color: #000; font-weight: bold; border: none; padding: 15px 30px; border-radius: 30px; font-size: 18px; cursor: pointer; width: 100%; margin-bottom: 10px; transition: transform 0.1s;}
+        .btn-primary:active { transform: scale(0.95); }
+        .btn-vip { background: linear-gradient(45deg, #635bff, #00d4ff); color: white; font-weight: bold; border: none; padding: 15px 30px; border-radius: 30px; font-size: 18px; cursor: pointer; width: 100%; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(99, 91, 255, 0.4); transition: transform 0.1s;}
+        .btn-vip:active { transform: scale(0.95); }
+        
+        .vip-input { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 18px; text-align: center; margin-bottom: 15px; outline: none; background: #222; color: white; border: 1px solid #444;}
         .hidden { display: none !important; }
 
         /* Hoveddesign app */
@@ -33,13 +37,14 @@ const APP_HTML = `
 
         .video-container { position: relative; flex: 1; display: flex; justify-content: center; align-items: center; }
         #remoteVideo { width: 100%; height: 100%; object-fit: cover; background: #111; }
-        #localVideo { position: absolute; bottom: 120px; right: 20px; width: 100px; height: 150px; object-fit: cover; border-radius: 12px; border: 2px solid white; transform: scaleX(-1); background: #222; z-index: 10; }
+        #localVideo { position: absolute; bottom: 120px; right: 20px; width: 100px; height: 150px; object-fit: cover; border-radius: 12px; border: 2px solid white; transform: scaleX(-1); background: #222; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         
         #timer { position: absolute; top: 70px; left: 20px; font-size: 40px; font-weight: 900; text-shadow: 0 2px 10px black; z-index: 10; display: none; }
-        #status { position: absolute; background: rgba(0,0,0,0.8); padding: 20px 30px; border-radius: 15px; font-size: 18px; font-weight: bold; z-index: 30; }
+        #status { position: absolute; background: rgba(0,0,0,0.8); padding: 20px 30px; border-radius: 15px; font-size: 18px; font-weight: bold; z-index: 30; text-align: center; }
 
         .controls { position: absolute; bottom: 0; width: 100%; padding: 20px; display: flex; gap: 15px; justify-content: center; z-index: 20; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
-        .action-btn { flex: 1; padding: 18px 0; font-size: 18px; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; color: white; max-width: 250px; }
+        .action-btn { flex: 1; padding: 18px 0; font-size: 18px; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; color: white; max-width: 250px; transition: transform 0.1s;}
+        .action-btn:active { transform: scale(0.95); }
         #startBtn { background: #58cc02; color: black; display: none; }
         #skipBtn { background: #ff3b30; display: none; }
         #timeBtn { background: #ffcc00; color: #000; display: none; }
@@ -51,28 +56,33 @@ const APP_HTML = `
         <div class="box">
             <h1>🔞 18-Årsgrense</h1>
             <p>Dette er en live video-tjeneste. Du må være over 18 år for å bruke den. Upassende adferd fører til permanent utestengelse.</p>
+            <div style="background: rgba(88,204,2,0.1); border: 1px solid #58cc02; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <p style="color: #58cc02; font-weight: bold; margin: 0; font-size: 18px;">🎁 Velkomstgave!</p>
+                <p style="color: white; margin: 5px 0 0 0; font-size: 14px;">Du får 25 gratis chatter for å teste appen.</p>
+            </div>
             <button class="btn-primary" onclick="acceptAge()">Jeg er over 18 år</button>
         </div>
     </div>
 
     <div id="paywallOverlay" class="overlay hidden">
         <div class="box">
-            <h1 style="color: #FFD700;">💎 VIP Tilgang</h1>
-            <p>Du har brukt opp dine 3 gratis chatter. For å fortsette ubegrenset, må du ha et VIP-passord.</p>
+            <h1 style="color: #00d4ff;">💎 VIP Tilgang</h1>
+            <p>Du har brukt opp dine 25 gratis chatter. For å fortsette ubegrenset, må du ha et VIP-passord.</p>
             
-            <button class="btn-vip" onclick="alert('Vipps 99 kr til DITT_NUMMER_HER for å få passordet tilsendt!')">1. Kjøp VIP (Vipps)</button>
+            <button class="btn-vip" onclick="window.open('DIN_STRIPE_LENKE_HER', '_blank')">💳 1. Kjøp VIP (Kort / Apple Pay)</button>
+            <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Passordet for å låse opp appen vises på kvitteringen etter at du har betalt.</p>
             
             <hr style="border: 1px solid #333; margin: 20px 0;">
-            <p style="font-size: 14px; margin-bottom: 10px;">Har du passordet?</p>
-            <input type="text" id="vipCodeInput" class="vip-input" placeholder="Skriv inn passord..." />
-            <button class="btn-primary" onclick="checkVip()">2. Lås opp appen</button>
+            <p style="font-size: 14px; margin-bottom: 10px;">Har du allerede passordet?</p>
+            <input type="text" id="vipCodeInput" class="vip-input" placeholder="Skriv inn passord..." autocomplete="off" />
+            <button class="btn-primary" style="background: #333; color: white;" onclick="checkVip()">2. Lås opp appen</button>
             <p id="vipError" style="color: #ff3b30; display: none; margin-top: 10px;">Feil passord!</p>
         </div>
     </div>
 
     <div class="header">
         <div class="logo">Videodating</div>
-        <div id="matchCounter" class="hidden">Gratis: 3</div>
+        <div id="matchCounter" class="hidden">Gratis: 25</div>
         <button id="reportBtn">🚨 Rapporter</button>
     </div>
 
@@ -91,9 +101,9 @@ const APP_HTML = `
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Laster inn lagrede data
-        let freeMatchesLeft = localStorage.getItem('freeMatches');
-        if (freeMatchesLeft === null) freeMatchesLeft = 3;
+        // Laster inn lagrede data. (Endret til freeMatches25 slik at tidligere testere også får 25 nye!)
+        let freeMatchesLeft = localStorage.getItem('freeMatches25');
+        if (freeMatchesLeft === null) freeMatchesLeft = 25;
         else freeMatchesLeft = parseInt(freeMatchesLeft);
         
         let isVIP = localStorage.getItem('isVIP') === 'true';
@@ -101,14 +111,17 @@ const APP_HTML = `
         function acceptAge() {
             document.getElementById('ageOverlay').classList.add('hidden');
             document.getElementById('startBtn').style.display = 'block';
+            if(!isVIP) document.getElementById('matchCounter').innerText = "Gratis igjen: " + freeMatchesLeft;
         }
 
         function checkVip() {
-            // DETTE ER PASSORDET DU GIR TIL DE SOM HAR BETALT:
+            // DETTE ER VIP-PASSORDET DITT
             if (document.getElementById('vipCodeInput').value.toUpperCase().trim() === "NORGE2026") {
                 localStorage.setItem('isVIP', 'true');
                 isVIP = true;
                 document.getElementById('paywallOverlay').classList.add('hidden');
+                ui.matchCounter.innerText = "💎 VIP";
+                ui.matchCounter.style.color = "#00d4ff";
                 finnMatch();
             } else {
                 document.getElementById('vipError').style.display = 'block';
@@ -134,6 +147,11 @@ const APP_HTML = `
                 ui.localVideo.srcObject = localStream;
                 ui.startBtn.style.display = 'none';
                 ui.matchCounter.classList.remove('hidden');
+                
+                if (isVIP) {
+                    ui.matchCounter.innerText = "💎 VIP";
+                    ui.matchCounter.style.color = "#00d4ff";
+                }
                 finnMatch();
             } catch (err) { alert("Du må tillate kamera og mikrofon for at appen skal fungere!"); }
         };
@@ -164,11 +182,8 @@ const APP_HTML = `
             }
             if (!isVIP) {
                 freeMatchesLeft--;
-                localStorage.setItem('freeMatches', freeMatchesLeft);
+                localStorage.setItem('freeMatches25', freeMatchesLeft);
                 ui.matchCounter.innerText = "Gratis igjen: " + freeMatchesLeft;
-            } else {
-                ui.matchCounter.innerText = "💎 VIP";
-                ui.matchCounter.style.color = "#FFD700";
             }
 
             ui.status.innerText = "Leter etter match... 🔍";
