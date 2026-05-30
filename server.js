@@ -13,16 +13,16 @@ const APP_HTML = `
     <title>Videodating</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-        body { background-color: #000; color: white; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+        body { background: #000 url('https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjMhV4xfJT9JcJOzhhzvYhK9pdVs-URxBN_Ts3HeCHKf97_deUmV5oCPIRuszwxhPiRxL59y5_-A6Ng8dRfZp6r5jKJoO0JsmPquTPj4DKA9_UMOhxRZKsyJraxE_XWChxPZvI_MrVv44odm4NmxgkRheeBDEwxCS4KUY9CJIhok0tM05Lyii9kXGk0vZg/s1600/video-dating.jpg') no-repeat center center fixed; background-size: cover; color: white; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
         
         /* Overlays (Velkomst, Info, Betaling) */
-        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; }
-        .box { background: #111; padding: 30px; border-radius: 20px; border: 1px solid #333; max-width: 420px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin: auto; }
+        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(5px); }
+        .box { background: rgba(17, 17, 17, 0.95); padding: 30px; border-radius: 20px; border: 1px solid #333; max-width: 420px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin: auto; }
         .box h1 { color: #58cc02; margin-bottom: 15px; font-size: 26px; }
         .box p { font-size: 15px; color: #ccc; margin-bottom: 20px; line-height: 1.5; }
         
         /* Kjønn-velger Design */
-        .gender-section { background: #1a1a1a; padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; border: 1px solid #333; }
+        .gender-section { background: rgba(26, 26, 26, 0.8); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; border: 1px solid #333; }
         .gender-section p.title { font-size: 14px; font-weight: bold; color: #aaa; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: center;}
         .g-btn-group { display: flex; gap: 8px; }
         .g-btn { flex: 1; padding: 15px 5px; background: #222; color: #fff; border: 2px solid #444; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
@@ -50,11 +50,11 @@ const APP_HTML = `
         #reportBtn { background: rgba(255, 59, 48, 0.8); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; }
 
         .video-container { position: relative; flex: 1; display: flex; justify-content: center; align-items: center; }
-        #remoteVideo { width: 100%; height: 100%; object-fit: cover; background: #111; }
+        #remoteVideo { width: 100%; height: 100%; object-fit: cover; background: transparent; }
         #localVideo { position: absolute; bottom: 120px; right: 20px; width: 100px; height: 150px; object-fit: cover; border-radius: 12px; border: 2px solid white; transform: scaleX(-1); background: #222; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         
         #timer { position: absolute; top: 70px; left: 20px; font-size: 40px; font-weight: 900; text-shadow: 0 2px 10px black; z-index: 10; display: none; }
-        #status { position: absolute; background: rgba(0,0,0,0.8); padding: 20px 30px; border-radius: 15px; font-size: 16px; font-weight: bold; z-index: 30; text-align: center; line-height: 1.4; }
+        #status { position: absolute; background: rgba(0,0,0,0.8); padding: 20px 30px; border-radius: 15px; font-size: 16px; font-weight: bold; z-index: 30; text-align: center; line-height: 1.4; backdrop-filter: blur(5px); }
 
         .controls { position: absolute; bottom: 0; width: 100%; padding: 20px; display: flex; gap: 15px; justify-content: center; z-index: 20; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
         .action-btn { flex: 1; padding: 18px 0; font-size: 18px; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; color: white; max-width: 250px; transition: transform 0.1s;}
@@ -79,7 +79,7 @@ const APP_HTML = `
                 </div>
             </div>
 
-            <p style="font-size: 16px; color:#FF0000;">Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br><br><span style="color: #ffcc00;">NB: VIP-betaling testes. Du har 25  gratis chatter!Kom tilbake senere når den har startet for real.Lite folk her fordi helt ny side</span></p>
+            <p style="font-size: 13px; color:#888;">Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br><br><span style="color: #ffcc00;">NB: VIP-betaling testes. Du får 25 gratis chatter!</span></p>
             
             <button class="btn-primary" onclick="acceptAge()">Godta (18+) & Start Appen</button>
             <button class="btn-info" onclick="toggleInfo(true)">📖 Skeptisk? Slik fungerer siden</button>
