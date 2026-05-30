@@ -1,4 +1,4 @@
-rkbt-pnwp-yphd-hofe-wxkfconst express = require('express');
+const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
@@ -55,7 +55,7 @@ const APP_HTML = `
     <div id="ageOverlay" class="overlay">
         <div class="box">
             <h1>🔞 18-Årsgrense</h1>
-            <p>Dette er en live video-tjeneste. Du må være over 18 år for å bruke den. Upassende adferd fører til permanent utestengelse.Betalingslink funker ikke enda fordi det er fremdeles i test fase så du får bare 25 chatter.kom tilbake senere</p>
+            <p>Dette er en live video-tjeneste. Du må være over 18 år for å bruke den. Upassende adferd fører til permanent utestengelse.<br><br><span style="color: #ffcc00;">Betalingslink funker ikke enda fordi det fremdeles er i testfase, så du får bare 25 chatter. Kom tilbake senere!</span></p>
             <div style="background: rgba(88,204,2,0.1); border: 1px solid #58cc02; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
                 <p style="color: #58cc02; font-weight: bold; margin: 0; font-size: 18px;">🎁 Velkomstgave!</p>
                 <p style="color: white; margin: 5px 0 0 0; font-size: 14px;">Du får 25 gratis chatter for å teste appen.</p>
@@ -67,15 +67,15 @@ const APP_HTML = `
     <div id="paywallOverlay" class="overlay hidden">
         <div class="box">
             <h1 style="color: #00d4ff;">💎 VIP Tilgang</h1>
-            <p>Du har brukt opp dine 25 gratis chatter. For å fortsette ubegrenset, må du ha et VIP-passord.</p>
+            <p>Du har brukt opp dine 25 gratis chatter. Betalingsløsningen er for øyeblikket i testfase. Vennligst kom tilbake senere!</p>
             
-            <button class="btn-vip" onclick="window.open('DIN_STRIPE_LENKE_HER', '_blank')">💳 1. Kjøp VIP (Kort / Apple Pay)</button>
+            <button class="btn-vip" style="opacity: 0.6;" onclick="alert('Betalingssystemet er under testing. Kom tilbake senere for å kjøpe VIP!')">💳 Kjøp VIP (Kommer snart)</button>
             <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Passordet for å låse opp appen vises på kvitteringen etter at du har betalt.</p>
             
             <hr style="border: 1px solid #333; margin: 20px 0;">
             <p style="font-size: 14px; margin-bottom: 10px;">Har du allerede passordet?</p>
             <input type="text" id="vipCodeInput" class="vip-input" placeholder="Skriv inn passord..." autocomplete="off" />
-            <button class="btn-primary" style="background: #333; color: white;" onclick="checkVip()">2. Lås opp appen</button>
+            <button class="btn-primary" style="background: #333; color: white;" onclick="checkVip()">Lås opp appen</button>
             <p id="vipError" style="color: #ff3b30; display: none; margin-top: 10px;">Feil passord!</p>
         </div>
     </div>
@@ -101,7 +101,7 @@ const APP_HTML = `
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // Laster inn lagrede data. (Endret til freeMatches25 slik at tidligere testere også får 25 nye!)
+        // Laster inn lagrede data. 
         let freeMatchesLeft = localStorage.getItem('freeMatches25');
         if (freeMatchesLeft === null) freeMatchesLeft = 25;
         else freeMatchesLeft = parseInt(freeMatchesLeft);
