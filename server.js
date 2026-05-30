@@ -73,6 +73,9 @@ const APP_HTML = `
         #startBtn { background: #58cc02; color: black; display: none; }
         #skipBtn { background: #ff3b30; display: none; }
         #timeBtn { background: #ffcc00; color: #000; display: none; }
+        
+        /* Boks for prisinfo på forsiden */
+        .price-info-box { background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.15); margin-bottom: 20px; text-align: left; }
     </style>
 </head>
 <body>
@@ -88,6 +91,12 @@ const APP_HTML = `
                     <button id="g-M" class="g-btn active" onclick="setGender('M')">Mann</button>
                     <button id="g-F" class="g-btn" onclick="setGender('F')">Kvinne</button>
                 </div>
+            </div>
+
+            <!-- Tydelig prising og vilkår opplyst PÅ FORSIDEN -->
+            <div class="price-info-box">
+                <p style="color: #fff; font-size: 15px; font-weight: bold; margin-bottom: 8px;">🎁 Prøv gratis i dag!</p>
+                <p style="color: #ccc; font-size: 13px; line-height: 1.5; margin-bottom: 0;">Du får 25 gratis chatter for å teste tjenesten. Deretter kreves VIP-tilgang for <strong style="color: #58cc02;">149,- per måned</strong> (tidsbegrenset tilbud). Ingen bindingstid.</p>
             </div>
 
             <p style="font-size: 14px; color: #ff4d4d; font-weight: 600; background: rgba(255, 77, 77, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 77, 77, 0.25); line-height: 1.6; margin-bottom: 20px;">
