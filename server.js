@@ -79,7 +79,7 @@ const APP_HTML = `
                 </div>
             </div>
 
-            <p style="font-size: 13px; color:#888;">Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br><br><span style="color: #ffcc00;">NB: VIP-betaling testes. Du har 25  gratis chatter!Kom tilbake senere når den har startet for real.Lite folk her fordi helt ny side</span></p>
+            <p style="font-size: 16px; color:#FF0000;">Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br><br><span style="color: #ffcc00;">NB: VIP-betaling testes. Du har 25  gratis chatter!Kom tilbake senere når den har startet for real.Lite folk her fordi helt ny side</span></p>
             
             <button class="btn-primary" onclick="acceptAge()">Godta (18+) & Start Appen</button>
             <button class="btn-info" onclick="toggleInfo(true)">📖 Skeptisk? Slik fungerer siden</button>
