@@ -23,10 +23,9 @@ const APP_HTML = `
         
         /* Kjønn-velger Design */
         .gender-section { background: #1a1a1a; padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; border: 1px solid #333; }
-        .gender-section p.title { font-size: 14px; font-weight: bold; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
-        .g-btn-group { display: flex; gap: 8px; margin-bottom: 15px; }
-        .g-btn-group:last-child { margin-bottom: 0; }
-        .g-btn { flex: 1; padding: 12px 5px; background: #222; color: #fff; border: 2px solid #444; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; }
+        .gender-section p.title { font-size: 14px; font-weight: bold; color: #aaa; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: center;}
+        .g-btn-group { display: flex; gap: 8px; }
+        .g-btn { flex: 1; padding: 15px 5px; background: #222; color: #fff; border: 2px solid #444; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
         .g-btn.active { border-color: #58cc02; background: rgba(88,204,2,0.15); color: #58cc02; }
         
         /* Knapper */
@@ -70,20 +69,13 @@ const APP_HTML = `
     <div id="ageOverlay" class="overlay">
         <div class="box">
             <h1 style="color: white; font-size: 26px;">Velkommen 👋</h1>
-            <p style="font-size: 14px; margin-bottom: 20px;">For å gi deg de beste matchene, trenger vi å vite hvem du er.</p>
+            <p style="font-size: 14px; margin-bottom: 20px;">Velg kjønn for å finne den perfekte matchen.</p>
             
             <div class="gender-section">
-                <p class="title">1. Jeg er:</p>
+                <p class="title">Jeg er:</p>
                 <div class="g-btn-group">
-                    <button id="g-M" class="g-btn active" onclick="setGender('my', 'M')">Mann</button>
-                    <button id="g-F" class="g-btn" onclick="setGender('my', 'F')">Kvinne</button>
-                </div>
-                
-                <p class="title" style="margin-top: 15px;">2. Jeg vil møte:</p>
-                <div class="g-btn-group">
-                    <button id="s-F" class="g-btn active" onclick="setGender('seek', 'F')">Kvinne</button>
-                    <button id="s-M" class="g-btn" onclick="setGender('seek', 'M')">Mann</button>
-                    <button id="s-A" class="g-btn" onclick="setGender('seek', 'A')">Begge</button>
+                    <button id="g-M" class="g-btn active" onclick="setGender('M')">Mann</button>
+                    <button id="g-F" class="g-btn" onclick="setGender('F')">Kvinne</button>
                 </div>
             </div>
 
@@ -100,7 +92,7 @@ const APP_HTML = `
             
             <div class="info-list">
                 <p><span>🔒</span> <b>100% Anonymt & Trygt:</b> Vi ber ikke om navn. Video går direkte mellom telefonene (Peer-to-Peer). Ingenting lagres noensinne hos oss.</p>
-                <p><span>🎯</span> <b>Smart Match:</b> Du kobles kun sammen med personer som passer dine valg (Kjønn).</p>
+                <p><span>🎯</span> <b>Smart Match:</b> Menn kobles automatisk med kvinner, og kvinner med menn.</p>
                 <p><span>⏱</span> <b>15 Sekunder:</b> Finner dere tonen? Hvis BEGGE trykker "➕ Tid", forlenges samtalen!</p>
                 <p><span>⏭</span> <b>Skip:</b> Er det ikke en match? Trykk "Skip" for å lynraskt hoppe videre.</p>
                 <p><span>🚨</span> <b>Nulltoleranse:</b> Føler du deg utrygg? Trykk "Rapporter". Brukeren utestenges da permanent fra plattformen.</p>
@@ -147,9 +139,8 @@ const APP_HTML = `
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // GLOBALE VARIABLER (Standardvalg: Mann søker Kvinne)
+        // GLOBALE VARIABLER (Standardvalg: Mann)
         let myGender = 'M';
-        let seekGender = 'F';
 
         // Laster inn gratis-chatter og VIP-status
         let freeMatchesLeft = localStorage.getItem('freeMatches25');
@@ -158,24 +149,15 @@ const APP_HTML = `
         let isVIP = localStorage.getItem('isVIP') === 'true';
 
         // UI FUNKSJONER (Kjønnsvalg)
-        function setGender(type, val) {
-            if (type === 'my') {
-                myGender = val;
-                document.getElementById('g-M').classList.remove('active');
-                document.getElementById('g-F').classList.remove('active');
-                document.getElementById('g-' + val).classList.add('active');
-            } else {
-                seekGender = val;
-                document.getElementById('s-M').classList.remove('active');
-                document.getElementById('s-F').classList.remove('active');
-                document.getElementById('s-A').classList.remove('active');
-                document.getElementById('s-' + val).classList.add('active');
-            }
+        function setGender(val) {
+            myGender = val;
+            document.getElementById('g-M').classList.remove('active');
+            document.getElementById('g-F').classList.remove('active');
+            document.getElementById('g-' + val).classList.add('active');
         }
 
-        // Husker valgene hvis man har vært på nettsiden før!
-        if (localStorage.getItem('myGender')) setGender('my', localStorage.getItem('myGender'));
-        if (localStorage.getItem('seekGender')) setGender('seek', localStorage.getItem('seekGender'));
+        // Husker valget hvis man har vært på nettsiden før!
+        if (localStorage.getItem('myGender')) setGender(localStorage.getItem('myGender'));
 
         function toggleInfo(show) {
             if(show) document.getElementById('infoOverlay').classList.remove('hidden');
@@ -183,9 +165,8 @@ const APP_HTML = `
         }
 
         function acceptAge() {
-            // Lagre kjønnsvalgene i nettleseren for fremtiden
+            // Lagre kjønnsvalget i nettleseren for fremtiden
             localStorage.setItem('myGender', myGender);
-            localStorage.setItem('seekGender', seekGender);
 
             document.getElementById('ageOverlay').classList.add('hidden');
             document.getElementById('startBtn').style.display = 'block';
@@ -264,14 +245,17 @@ const APP_HTML = `
                 ui.matchCounter.innerText = "Gratis igjen: " + freeMatchesLeft;
             }
 
-            ui.status.innerHTML = "Leter etter match for deg... 🔍<br><span style='font-size:12px; color:#aaa; font-weight:normal;'>(Du kobles kun med de som matcher dine valg)</span>";
+            // Hvem leter vi etter? (Motsatt av hva du er)
+            let leterEtterTekst = (myGender === 'M') ? 'kvinne' : 'mann';
+
+            ui.status.innerHTML = "Leter etter en " + leterEtterTekst + " til deg... 🔍";
             ui.status.style.display = "block";
             ui.skipBtn.style.display = "none";
             ui.timeBtn.style.display = "none";
             ui.reportBtn.style.display = "none";
             
-            // Sender kjønns-preferansene til serveren for matchmaking
-            socket.emit('find_match', { gender: myGender, seeking: seekGender });
+            // Sender valget til serveren for matchmaking
+            socket.emit('find_match', { gender: myGender });
         }
 
         socket.on('match_found', async (data) => {
@@ -369,7 +353,7 @@ app.get('*', (req, res) => {
     res.send(APP_HTML);
 });
 
-// --- SMART MATCHMAKING SERVER (Med Kjønns-filter) ---
+// --- SMART MATCHMAKING SERVER (KUN HETERO-MATCHING) ---
 let queue = [];
 const bannedIPs = new Set();
 
@@ -388,22 +372,14 @@ io.on('connection', (socket) => {
         cleanupMatch(socket);
         queue = queue.filter(u => u.id !== socket.id);
 
-        // Lagrer kjønn og ønsker på serveren mens de står i kø
+        // Lagrer hvem de er
         socket.gender = prefs.gender; // 'M' eller 'F'
-        socket.seeking = prefs.seeking; // 'M', 'F', eller 'A' (Alle)
 
-        // Finn en partner i køen som matcher preferansene!
-        let matchIndex = queue.findIndex(u => {
-            // Vil jeg ha dem?
-            let iMatchTheirs = (socket.seeking === 'A' || socket.seeking === u.gender);
-            // Vil de ha meg?
-            let theyMatchMine = (u.seeking === 'A' || u.seeking === socket.gender);
-            
-            return iMatchTheirs && theyMatchMine; // Begge MÅ være enige
-        });
+        // Finn en partner i køen av motsatt kjønn
+        let matchIndex = queue.findIndex(u => u.gender !== socket.gender);
 
         if (matchIndex !== -1) {
-            // Vi fant en perfekt match! Plukk dem ut av køen
+            // Vi fant en match! Plukk dem ut av køen
             const partner = queue.splice(matchIndex, 1)[0];
             
             socket.currentPartner = partner.id;
@@ -414,7 +390,7 @@ io.on('connection', (socket) => {
             socket.emit('match_found', { initiator: true, partnerId: partner.id });
             partner.emit('match_found', { initiator: false, partnerId: socket.id });
         } else {
-            // Ingen full match akkurat nå. Setter deg i køen.
+            // Ingen av motsatt kjønn ledig akkurat nå. Setter i køen.
             queue.push(socket);
         }
     });
@@ -470,5 +446,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
-    console.log(`🚀 Smart Server live på port ${PORT}`);
+    console.log(`🚀 Hetero-Match Server live på port ${PORT}`);
 });
