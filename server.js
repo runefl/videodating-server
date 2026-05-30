@@ -80,7 +80,7 @@ const APP_HTML = `
     <div id="ageOverlay" class="overlay">
         <div class="box">
             <h1 style="color: white; font-size: 26px; margin-bottom: 5px;">Velkommen 👋</h1>
-            <p style="color: #58cc02; font-weight: bold; font-size: 16px; margin-bottom: 20px;">🚀 Rett på video – Trenger ikke match først. Full tilgang når testperiode er over. 149 kr/mnd. Ingen skjulte kostnader som hos andre.</p>
+            <p style="color: #58cc02; font-weight: bold; font-size: 16px; margin-bottom: 20px;">🚀 Rett på video –FUNKER BARE PÅ PC.IKKE PÅ MOBIL: Trenger ikke match først. Full tilgang når testperiode er over. 149 kr/mnd. Ingen skjulte kostnader som hos andre.</p>
             
             <div class="gender-section">
                 <p class="title">Jeg er:</p>
