@@ -13,48 +13,61 @@ const APP_HTML = `
     <title>Videodating</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-        body { background-color: #000; color: white; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
         
-        /* Overlays (Velkomst, Info, Betaling) */
-        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; }
-        .box { background: #111; padding: 30px; border-radius: 20px; border: 1px solid #333; max-width: 420px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin: auto; }
+        body { 
+            background: linear-gradient(-45deg, #1f0b3b, #591b4c, #8c1c4b, #1f0b3b);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            color: white; 
+            height: 100dvh; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
-        /* Kjønn-velger Design */
-        .gender-section { background: #1a1a1a; padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; border: 1px solid #333; }
+        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.25); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
+        .box { background: rgba(17, 17, 17, 0.75); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); max-width: 420px; width: 100%; box-shadow: 0 15px 50px rgba(0,0,0,0.6); margin: auto; }
+        .box h1 { color: #58cc02; margin-bottom: 5px; font-size: 26px; }
+        .box p { font-size: 15px; color: #ccc; margin-bottom: 20px; line-height: 1.5; }
+        
+        .gender-section { background: rgba(0, 0, 0, 0.4); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; border: 1px solid rgba(255, 255, 255, 0.05); }
         .gender-section p.title { font-size: 14px; font-weight: bold; color: #aaa; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: center;}
         .g-btn-group { display: flex; gap: 8px; }
-        .g-btn { flex: 1; padding: 15px 5px; background: #222; color: #fff; border: 2px solid #444; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
+        .g-btn { flex: 1; padding: 15px 5px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 2px solid #444; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
         .g-btn.active { border-color: #58cc02; background: rgba(88,204,2,0.15); color: #58cc02; }
         
-        /* Knapper */
         .btn-primary { background: #58cc02; color: #000; font-weight: bold; border: none; padding: 16px 30px; border-radius: 30px; font-size: 18px; cursor: pointer; width: 100%; margin-bottom: 10px; transition: transform 0.1s;}
         .btn-primary:active { transform: scale(0.95); }
         .btn-info { background: transparent; color: #aaa; border: none; font-size: 15px; cursor: pointer; margin-top: 15px; text-decoration: underline; padding: 10px; }
         
         .btn-vip { background: linear-gradient(45deg, #635bff, #00d4ff); color: white; font-weight: bold; border: none; padding: 15px 30px; border-radius: 30px; font-size: 18px; cursor: pointer; width: 100%; margin-bottom: 10px; box-shadow: 0 4px 15px rgba(99, 91, 255, 0.4); transition: transform 0.1s;}
         .btn-vip:active { transform: scale(0.95); }
-        .vip-input { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 18px; text-align: center; margin-bottom: 15px; outline: none; background: #222; color: white; border: 1px solid #444;}
+        .vip-input { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 18px; text-align: center; margin-bottom: 15px; outline: none; background: rgba(0, 0, 0, 0.5); color: white; border: 1px solid rgba(255, 255, 255, 0.1);}
         .hidden { display: none !important; }
         
-        /* Infoboks liste */
         .info-list { text-align: left; color: #ccc; font-size: 15px; margin-bottom: 25px; line-height: 1.6; }
         .info-list p { margin-bottom: 15px; }
         .info-list span { font-size: 22px; margin-right: 10px; vertical-align: middle; }
 
-        /* Hoveddesign app */
-        .header { position: absolute; top: 0; width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 20; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
+        .header { position: absolute; top: 0; width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 20; background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent); }
         .logo { font-size: 20px; font-weight: 800; color: #58cc02; }
-        #matchCounter { color: #aaa; font-size: 14px; font-weight: bold; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 10px; }
+        #matchCounter { color: #aaa; font-size: 14px; font-weight: bold; background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 10px; }
         #reportBtn { background: rgba(255, 59, 48, 0.8); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; }
 
         .video-container { position: relative; flex: 1; display: flex; justify-content: center; align-items: center; }
-        #remoteVideo { width: 100%; height: 100%; object-fit: cover; background: #111; }
+        #remoteVideo { width: 100%; height: 100%; object-fit: cover; background: transparent; }
         #localVideo { position: absolute; bottom: 120px; right: 20px; width: 100px; height: 150px; object-fit: cover; border-radius: 12px; border: 2px solid white; transform: scaleX(-1); background: #222; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         
         #timer { position: absolute; top: 70px; left: 20px; font-size: 40px; font-weight: 900; text-shadow: 0 2px 10px black; z-index: 10; display: none; }
-        #status { position: absolute; background: rgba(0,0,0,0.8); padding: 20px 30px; border-radius: 15px; font-size: 16px; font-weight: bold; z-index: 30; text-align: center; line-height: 1.4; }
+        #status { position: absolute; background: rgba(0,0,0,0.4); padding: 20px 30px; border-radius: 15px; font-size: 16px; font-weight: bold; z-index: 30; text-align: center; line-height: 1.4; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 
-        .controls { position: absolute; bottom: 0; width: 100%; padding: 20px; display: flex; gap: 15px; justify-content: center; z-index: 20; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+        .controls { position: absolute; bottom: 0; width: 100%; padding: 20px; display: flex; gap: 15px; justify-content: center; z-index: 20; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); }
         .action-btn { flex: 1; padding: 18px 0; font-size: 18px; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; color: white; max-width: 250px; transition: transform 0.1s;}
         .action-btn:active { transform: scale(0.95); }
         #startBtn { background: #58cc02; color: black; display: none; }
@@ -67,7 +80,7 @@ const APP_HTML = `
     <div id="ageOverlay" class="overlay">
         <div class="box">
             <h1 style="color: white; font-size: 26px; margin-bottom: 5px;">Velkommen 👋</h1>
-            <p style="color: #58cc02; font-weight: bold; font-size: 16px; margin-bottom: 20px;">🚀 Rett på video – Trenger ikke match først.Full tilgang når test periode er over.149 kr/mnd Ingen skjulte kostnader som hos andre</p>
+            <p style="color: #58cc02; font-weight: bold; font-size: 16px; margin-bottom: 20px;">🚀 Rett på video – Trenger ikke match først. Full tilgang når testperiode er over. 149 kr/mnd. Ingen skjulte kostnader som hos andre.</p>
             
             <div class="gender-section">
                 <p class="title">Jeg er:</p>
@@ -77,7 +90,12 @@ const APP_HTML = `
                 </div>
             </div>
 
-            <p style="font-size: 15px; color:#FF0000;">Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.Og kan bli uthengt i Facebook gruppe<br><br><span style="color: #ffcc00;">Prøv helt gratis: Du får 25 gratis chatter i dag!</span></p>
+            <!-- Lovlig, trygg og profesjonell advarsel -->
+            <p style="font-size: 14px; color: #ff4d4d; font-weight: 600; background: rgba(255, 77, 77, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 77, 77, 0.25); line-height: 1.6; margin-bottom: 20px;">
+                Live video-tjeneste med 18-årsgrense. Upassende adferd fører til umiddelbar og permanent utestengelse fra plattformen (IP-blokkering).<br><br>
+                Testfase: Lite folk her enda fordi det er en helt ny side. Kom tilbake senere for fullt fungerende videodating.<br><br>
+                <span style="color: #ffcc00;">Prøv helt gratis: Du får 25 gratis chatter i dag!</span>
+            </p>
             
             <button class="btn-primary" onclick="acceptAge()">Godta (18+) & Start Appen</button>
             <button class="btn-info" onclick="toggleInfo(true)">📖 Slik utfordrer vi Tinder</button>
