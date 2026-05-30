@@ -14,12 +14,27 @@ const APP_HTML = `
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
         
-        /* Oppdatert med et høyoppløselig premium-bilde fra Unsplash for å sikre et profesjonelt utseende */
-        body { background: #000 url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1920&auto=format&fit=crop') no-repeat center center fixed; background-size: cover; color: white; height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+        /* Premium Animert Kode-bakgrunn */
+        body { 
+            background: linear-gradient(-45deg, #0d0d12, #1a1a24, #0b130e, #000000);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white; 
+            height: 100dvh; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
-        /* Overlays (Velkomst, Info, Betaling) - Blur redusert til 5px for å vise bildekvaliteten */
-        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(5px); }
-        .box { background: rgba(17, 17, 17, 0.85); padding: 30px; border-radius: 20px; border: 1px solid #333; max-width: 420px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.8); margin: auto; }
+        /* Overlays (Velkomst, Info, Betaling) */
+        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.4); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(8px); }
+        .box { background: rgba(17, 17, 17, 0.85); padding: 30px; border-radius: 20px; border: 1px solid #333; max-width: 420px; width: 100%; box-shadow: 0 10px 40px rgba(0,0,0,0.9); margin: auto; }
         .box h1 { color: #58cc02; margin-bottom: 15px; font-size: 26px; }
         .box p { font-size: 15px; color: #ccc; margin-bottom: 20px; line-height: 1.5; }
         
@@ -46,7 +61,7 @@ const APP_HTML = `
         .info-list span { font-size: 22px; margin-right: 10px; vertical-align: middle; }
 
         /* Hoveddesign app */
-        .header { position: absolute; top: 0; width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 20; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent); }
+        .header { position: absolute; top: 0; width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 20; background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent); }
         .logo { font-size: 20px; font-weight: 800; color: #58cc02; }
         #matchCounter { color: #aaa; font-size: 14px; font-weight: bold; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 10px; }
         #reportBtn { background: rgba(255, 59, 48, 0.8); border: none; color: white; padding: 8px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; }
@@ -58,7 +73,7 @@ const APP_HTML = `
         #timer { position: absolute; top: 70px; left: 20px; font-size: 40px; font-weight: 900; text-shadow: 0 2px 10px black; z-index: 10; display: none; }
         #status { position: absolute; background: rgba(0,0,0,0.6); padding: 20px 30px; border-radius: 15px; font-size: 16px; font-weight: bold; z-index: 30; text-align: center; line-height: 1.4; backdrop-filter: blur(8px); }
 
-        .controls { position: absolute; bottom: 0; width: 100%; padding: 20px; display: flex; gap: 15px; justify-content: center; z-index: 20; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); }
+        .controls { position: absolute; bottom: 0; width: 100%; padding: 20px; display: flex; gap: 15px; justify-content: center; z-index: 20; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); }
         .action-btn { flex: 1; padding: 18px 0; font-size: 18px; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; color: white; max-width: 250px; transition: transform 0.1s;}
         .action-btn:active { transform: scale(0.95); }
         #startBtn { background: #58cc02; color: black; display: none; }
