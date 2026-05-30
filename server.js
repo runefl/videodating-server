@@ -91,9 +91,9 @@ const APP_HTML = `
             </div>
 
             <p style="font-size: 14px; color: #ff4d4d; font-weight: 600; background: rgba(255, 77, 77, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 77, 77, 0.25); line-height: 1.6; margin-bottom: 20px;">
-                Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br><br>
-                  Testfase:Lite folk her enda fordi det er en helt ny side. Kom tilbake senere for fullt fungerende videodating.
-            </p>
+               Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br>
+
+Testfase:Lite folk her enda fordi det er en helt ny side. Kom tilbake senere for fullt fungerende videodating</p>
             
             <button class="btn-primary" onclick="acceptAge()">Godta (18+) & Start Appen</button>
             <button class="btn-info" onclick="toggleInfo(true)">📖 Skeptisk? Slik fungerer siden</button>
