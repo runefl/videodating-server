@@ -14,7 +14,6 @@ const APP_HTML = `
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
         
-        /* Premium Animert Kode-bakgrunn - Rike, synlige farger */
         body { 
             background: linear-gradient(-45deg, #1f0b3b, #591b4c, #8c1c4b, #1f0b3b);
             background-size: 400% 400%;
@@ -32,20 +31,17 @@ const APP_HTML = `
             100% { background-position: 0% 50%; }
         }
         
-        /* Overlays - Redusert mørklegging og økt "frostet glass"-effekt slik at fargene popper */
         .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.25); z-index: 100; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px; overflow-y: auto; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); }
         .box { background: rgba(17, 17, 17, 0.75); padding: 30px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); max-width: 420px; width: 100%; box-shadow: 0 15px 50px rgba(0,0,0,0.6); margin: auto; }
         .box h1 { color: #58cc02; margin-bottom: 15px; font-size: 26px; }
         .box p { font-size: 15px; color: #ccc; margin-bottom: 20px; line-height: 1.5; }
         
-        /* Kjønn-velger Design */
         .gender-section { background: rgba(0, 0, 0, 0.4); padding: 15px; border-radius: 15px; margin-bottom: 20px; text-align: left; border: 1px solid rgba(255, 255, 255, 0.05); }
         .gender-section p.title { font-size: 14px; font-weight: bold; color: #aaa; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; text-align: center;}
         .g-btn-group { display: flex; gap: 8px; }
         .g-btn { flex: 1; padding: 15px 5px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 2px solid #444; border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.2s; }
         .g-btn.active { border-color: #58cc02; background: rgba(88,204,2,0.15); color: #58cc02; }
         
-        /* Knapper */
         .btn-primary { background: #58cc02; color: #000; font-weight: bold; border: none; padding: 16px 30px; border-radius: 30px; font-size: 18px; cursor: pointer; width: 100%; margin-bottom: 10px; transition: transform 0.1s;}
         .btn-primary:active { transform: scale(0.95); }
         .btn-info { background: transparent; color: #aaa; border: none; font-size: 15px; cursor: pointer; margin-top: 15px; text-decoration: underline; padding: 10px; }
@@ -55,12 +51,10 @@ const APP_HTML = `
         .vip-input { width: 100%; padding: 15px; border-radius: 10px; border: none; font-size: 18px; text-align: center; margin-bottom: 15px; outline: none; background: rgba(0, 0, 0, 0.5); color: white; border: 1px solid rgba(255, 255, 255, 0.1);}
         .hidden { display: none !important; }
         
-        /* Infoboks liste */
         .info-list { text-align: left; color: #ccc; font-size: 15px; margin-bottom: 25px; line-height: 1.6; }
         .info-list p { margin-bottom: 15px; }
         .info-list span { font-size: 22px; margin-right: 10px; vertical-align: middle; }
 
-        /* Hoveddesign app */
         .header { position: absolute; top: 0; width: 100%; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; z-index: 20; background: linear-gradient(to bottom, rgba(0,0,0,0.5), transparent); }
         .logo { font-size: 20px; font-weight: 800; color: #58cc02; }
         #matchCounter { color: #aaa; font-size: 14px; font-weight: bold; background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 10px; }
@@ -96,10 +90,9 @@ const APP_HTML = `
                 </div>
             </div>
 
-            <!-- Tydeligere, oppdatert advarsel med rød tekstboks -->
             <p style="font-size: 14px; color: #ff4d4d; font-weight: 600; background: rgba(255, 77, 77, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 77, 77, 0.25); line-height: 1.6; margin-bottom: 20px;">
                 Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br><br>
-                Testfase: Kom tilbake senere for fullt fungerende videodating.
+                  Testfase:Lite folk her enda fordi det er en helt ny side. Kom tilbake senere for fullt fungerende videodating.
             </p>
             
             <button class="btn-primary" onclick="acceptAge()">Godta (18+) & Start Appen</button>
@@ -126,9 +119,17 @@ const APP_HTML = `
     <div id="paywallOverlay" class="overlay hidden">
         <div class="box">
             <h1 style="color: #00d4ff;">💎 VIP Tilgang</h1>
-            <p>Du har brukt opp dine 25 gratis chatter. Betalingsløsningen er for øyeblikket i testfase. Vennligst kom tilbake senere!</p>
+            <p style="margin-bottom: 10px;">Du har brukt opp dine 25 gratis chatter.</p>
             
-            <button class="btn-vip" style="opacity: 0.6;" onclick="alert('Betalingssystemet er under testing. Kom tilbake senere for å kjøpe VIP!')">💳 Kjøp VIP (Kommer snart)</button>
+            <!-- Oppdatert til realistisk premium-pris -->
+            <div style="background: rgba(88, 204, 2, 0.1); border: 1px solid #58cc02; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <p style="color: #fff; font-size: 14px; margin-bottom: 5px; font-weight: bold;">🔥 Tidsbegrenset Lanseringstilbud 🔥</p>
+                <p style="color: #58cc02; font-size: 26px; font-weight: 900; margin-bottom: 0;">Kun 149,- / md</p>
+                <p style="color: #888; font-size: 12px; text-decoration: line-through; margin-bottom: 0;">Normalpris: 299,- kr per måned</p>
+                <p style="color: #aaa; font-size: 11px; margin-top: 5px;">Ingen bindingstid. Avslutt når du vil.</p>
+            </div>
+            
+            <button class="btn-vip" style="opacity: 0.6;" onclick="alert('Betalingssystemet er under testing. Kom tilbake senere for å kjøpe VIP!')">💳 Kjøp VIP for 149,- / md (Kommer snart)</button>
             <p style="font-size: 12px; color: #888; margin-bottom: 20px;">Passordet for å låse opp appen vises på kvitteringen etter at du har betalt.</p>
             
             <hr style="border: 1px solid #333; margin: 20px 0;">
@@ -160,16 +161,13 @@ const APP_HTML = `
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        // GLOBALE VARIABLER (Standardvalg: Mann)
         let myGender = 'M';
 
-        // Laster inn gratis-chatter og VIP-status
         let freeMatchesLeft = localStorage.getItem('freeMatches25');
         if (freeMatchesLeft === null) freeMatchesLeft = 25;
         else freeMatchesLeft = parseInt(freeMatchesLeft);
         let isVIP = localStorage.getItem('isVIP') === 'true';
 
-        // UI FUNKSJONER (Kjønnsvalg)
         function setGender(val) {
             myGender = val;
             document.getElementById('g-M').classList.remove('active');
@@ -177,7 +175,6 @@ const APP_HTML = `
             document.getElementById('g-' + val).classList.add('active');
         }
 
-        // Husker valget hvis man har vært på nettsiden før!
         if (localStorage.getItem('myGender')) setGender(localStorage.getItem('myGender'));
 
         function toggleInfo(show) {
@@ -186,7 +183,6 @@ const APP_HTML = `
         }
 
         function acceptAge() {
-            // Lagre kjønnsvalget i nettleseren for fremtiden
             localStorage.setItem('myGender', myGender);
 
             document.getElementById('ageOverlay').classList.add('hidden');
@@ -207,7 +203,6 @@ const APP_HTML = `
             }
         }
 
-        // WEBRTC & SOCKET LOGIKK
         const socket = io();
         let localStream, peerConnection, partnerId = null, timerInterval, timeLeft = 15, hasRequestedTime = false;
 
@@ -266,7 +261,6 @@ const APP_HTML = `
                 ui.matchCounter.innerText = "Gratis igjen: " + freeMatchesLeft;
             }
 
-            // Hvem leter vi etter? (Motsatt av hva du er)
             let leterEtterTekst = (myGender === 'M') ? 'kvinne' : 'mann';
 
             ui.status.innerHTML = "Leter etter en " + leterEtterTekst + " til deg... 🔍";
@@ -275,7 +269,6 @@ const APP_HTML = `
             ui.timeBtn.style.display = "none";
             ui.reportBtn.style.display = "none";
             
-            // Sender valget til serveren for matchmaking
             socket.emit('find_match', { gender: myGender });
         }
 
@@ -369,12 +362,10 @@ const APP_HTML = `
 </html>
 `;
 
-// Tvinger serveren til å sende app-designet uansett hva
 app.get('*', (req, res) => {
     res.send(APP_HTML);
 });
 
-// --- SMART MATCHMAKING SERVER (KUN HETERO-MATCHING) ---
 let queue = [];
 const bannedIPs = new Set();
 
@@ -388,19 +379,14 @@ io.on('connection', (socket) => {
     }
     socket.ip = clientIp;
 
-    // Når en bruker trykker "Søk etter match"
     socket.on('find_match', (prefs) => {
         cleanupMatch(socket);
         queue = queue.filter(u => u.id !== socket.id);
+        socket.gender = prefs.gender;
 
-        // Lagrer hvem de er
-        socket.gender = prefs.gender; // 'M' eller 'F'
-
-        // Finn en partner i køen av motsatt kjønn
         let matchIndex = queue.findIndex(u => u.gender !== socket.gender);
 
         if (matchIndex !== -1) {
-            // Vi fant en match! Plukk dem ut av køen
             const partner = queue.splice(matchIndex, 1)[0];
             
             socket.currentPartner = partner.id;
@@ -411,7 +397,6 @@ io.on('connection', (socket) => {
             socket.emit('match_found', { initiator: true, partnerId: partner.id });
             partner.emit('match_found', { initiator: false, partnerId: socket.id });
         } else {
-            // Ingen av motsatt kjønn ledig akkurat nå. Setter i køen.
             queue.push(socket);
         }
     });
