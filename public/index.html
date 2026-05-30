@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Live Videochat</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            background-color: #000; color: white; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            height: 100dvh; overflow: hidden; display: flex; flex-direction: column; 
+        }
+        
+        .header {
+            position: absolute; top: 0; width: 100%; padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center; z-index: 20;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+        }
+        .logo { font-size: 20px; font-weight: 800; color: #58cc02; }
+        #reportBtn { 
+            background: rgba(255, 59, 48, 0.8); border: none; color: white; 
+            padding: 8px 12px; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; 
+        }
+
+        .video-container { position: relative; flex: 1; background: #111; display: flex; justify-content: center; align-items: center; }
+        #remoteVideo { width: 100%; height: 100%; object-fit: cover; }
+        #localVideo { 
+            position: absolute; bottom: 120px; right: 20px; width: 100px; height: 150px; 
+            object-fit: cover; border-radius: 12px; border: 2px solid rgba(255,255,255,0.3); 
+            transform: scaleX(-1); background: #222; box-shadow: 0 4px 15px rgba(0,0,0,0.6); z-index: 10; 
+        }
+
+        #timer { 
+            position: absolute; top: 70px; left: 20px; font-size: 40px; font-weight: 900; 
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8); z-index: 10; display: none; 
+        }
+        
+        #notification {
+            position: absolute; top: 120px; left: 20px; background: #0a84ff; font-weight: bold;
+            padding: 8px 15px; border-radius: 20px; font-size: 14px; display: none; z-index: 10;
+        }
+
+        #status { 
+            position: absolute; background: rgba(0,0,0,0.8); padding: 20px 30px; 
+            border-radius: 15px; font-size: 18px; font-weight: bold; text-align: center; z-index: 30; 
+        }
+
+        .controls { 
+            position: absolute; bottom: 0; width: 100%; padding: 20px; padding-bottom: calc(20px + env(safe-area-inset-bottom));
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); 
+            display: flex; gap: 15px; justify-content: center; z-index: 20; 
+        }
+        button.action-btn { 
+            flex: 1; padding: 18px 0; font-size: 18px; font-weight: bold; border: none; 
+            border-radius: 30px; cursor: pointer; transition: 0.1s; color: white; max-width: 250px;
+        }
+        button.action-btn:active { transform: scale(0.95); }
+        
+        #startBtn { background: #58cc02; max-width: 300px; }
+        #skipBtn { background: #ff3b30; display: none; }
+        #timeBtn { background: #ffcc00; color: #000; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">MonkeyPro 🐒</div>
+        <button id="reportBtn">🚨 Rapporter</button>
+    </div>
+
+    <div class="video-container">
+        <div id="status">Klar til å chatte?</div>
+        <video id="remoteVideo" autoplay playsinline></video>
+        <video id="localVideo" autoplay playsinline muted></video>
+        <div id="timer">15</div>
+        <div id="notification">Partner la til tid! ⏱</div>
+    </div>
+
+    <div class="controls">
+        <button id="startBtn" class="action-btn">Start Kamera</button>
+        <button id="skipBtn" class="action-btn">⏭ Skip</button>
+        <button id="timeBtn" class="action-btn">➕ Tid</button>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let localStream, peerConnection, partnerId = null, timerInterval, timeLeft = 15;
+        let hasRequestedTime = false;
+
+        const ui = {
+            localVideo: document.getElementById('localVideo'), remoteVideo: document.getElementById('remoteVideo'),
+            startBtn: document.getElementById('startBtn'), skipBtn: document.getElementById('skipBtn'),
+            timeBtn: document.getElementById('timeBtn'), reportBtn: document.getElementById('reportBtn'),
+            status: document.getElementById('status'), timer: document.getElementById('timer'),
+            notification: document.getElementById('notification')
+        };
+
+        // Google STUN server for å koble telefoner sammen
+        const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] };
+
+        ui.startBtn.onclick = async () => {
+            try {
+                // Tvinger frontkamera på mobil ("user")
+                localStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
+                ui.localVideo.srcObject = localStream;
+                ui.startBtn.style.display = 'none';
+                finnMatch();
+            } catch (err) { alert("Du må tillate kamera og mikrofon!"); }
+        };
+
+        ui.skipBtn.onclick = finnMatch;
+
+        ui.timeBtn.onclick = () => {
+            if (hasRequestedTime) return;
+            socket.emit('add_time');
+            hasRequestedTime = true;
+            ui.timeBtn.innerText = "⏳ Venter...";
+            ui.timeBtn.style.opacity = "0.7";
+        };
+
+        ui.reportBtn.onclick = () => {
+            if(confirm("Er du sikker på at du vil permanent blokkere denne brukeren?")) {
+                socket.emit('report_user');
+                finnMatch();
+            }
+        };
+
+        function finnMatch() {
+            avsluttTilkobling();
+            ui.status.innerText = "Leter etter match... 🔍";
+            ui.status.style.display = "block";
+            ui.skipBtn.style.display = "none";
+            ui.timeBtn.style.display = "none";
+            ui.reportBtn.style.display = "none";
+            socket.emit('find_match');
+        }
+
+        socket.on('match_found', async (data) => {
+            partnerId = data.partnerId;
+            ui.status.style.display = "none";
+            ui.skipBtn.style.display = "block";
+            ui.timeBtn.style.display = "block";
+            ui.reportBtn.style.display = "block";
+            
+            resetTidKnapp();
+            peerConnection = new RTCPeerConnection(rtcConfig);
+            localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+
+            peerConnection.ontrack = (event) => {
+                ui.remoteVideo.srcObject = event.streams[0];
+                startTimer(15);
+            };
+
+            peerConnection.onicecandidate = (event) => {
+                if (event.candidate) socket.emit('signal', { to: partnerId, signalData: { type: 'ice', candidate: event.candidate } });
+            };
+
+            if (data.initiator) {
+                const offer = await peerConnection.createOffer();
+                await peerConnection.setLocalDescription(offer);
+                socket.emit('signal', { to: partnerId, signalData: offer });
+            }
+        });
+
+        socket.on('signal', async (data) => {
+            if (!peerConnection) return;
+            try {
+                if (data.signalData.type === 'offer') {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.signalData));
+                    const answer = await peerConnection.createAnswer();
+                    await peerConnection.setLocalDescription(answer);
+                    socket.emit('signal', { to: data.from, signalData: answer });
+                } else if (data.signalData.type === 'answer') {
+                    await peerConnection.setRemoteDescription(new RTCSessionDescription(data.signalData));
+                } else if (data.signalData.type === 'ice') {
+                    await peerConnection.addIceCandidate(new RTCIceCandidate(data.signalData.candidate));
+                }
+            } catch (err) { console.error("WebRTC Feil", err); }
+        });
+
+        socket.on('partner_wants_time', () => {
+            ui.notification.style.display = 'block';
+            setTimeout(() => { ui.notification.style.display = 'none'; }, 3000);
+        });
+
+        socket.on('time_added', () => {
+            timeLeft += 15; // Legger til 15 ekstra sekunder
+            ui.timer.style.color = "#58cc02";
+            setTimeout(() => ui.timer.style.color = "white", 1000);
+            resetTidKnapp();
+        });
+
+        socket.on('partner_left', () => {
+            ui.status.innerText = "Partner hoppet over deg.";
+            ui.status.style.display = "block";
+            setTimeout(finnMatch, 500);
+        });
+
+        socket.on('banned', () => {
+            avsluttTilkobling();
+            ui.status.innerHTML = "<h2 style='color:#ff3b30;'>Utestengt.</h2><p>IP-adressen din er blokkert pga. regelbrudd.</p>";
+            ui.status.style.display = "block";
+        });
+
+        function startTimer(sekunder) {
+            timeLeft = sekunder;
+            ui.timer.style.display = 'block';
+            ui.timer.innerText = timeLeft;
+            clearInterval(timerInterval);
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                ui.timer.innerText = timeLeft;
+                if (timeLeft <= 5) ui.timer.style.color = "#ff3b30";
+                else ui.timer.style.color = "white";
+                
+                if (timeLeft <= 0) finnMatch();
+            }, 1000);
+        }
+
+        function resetTidKnapp() {
+            hasRequestedTime = false;
+            ui.timeBtn.innerText = "➕ Tid";
+            ui.timeBtn.style.opacity = "1";
+        }
+
+        function avsluttTilkobling() {
+            if (peerConnection) peerConnection.close();
+            peerConnection = null;
+            ui.remoteVideo.srcObject = null;
+            partnerId = null;
+            clearInterval(timerInterval);
+            ui.timer.style.display = 'none';
+            ui.notification.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
