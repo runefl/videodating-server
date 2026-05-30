@@ -91,9 +91,9 @@ const APP_HTML = `
             </div>
 
             <p style="font-size: 14px; color: #ff4d4d; font-weight: 600; background: rgba(255, 77, 77, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 77, 77, 0.25); line-height: 1.6; margin-bottom: 20px;">
-               Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br>
-
-Testfase:Lite folk her enda fordi det er en helt ny side. Kom tilbake senere for fullt fungerende videodating</p>
+                Live video-tjeneste med 18-årsgrense. Upassende adferd fører til permanent utestengelse.<br><br>
+                Testfase: Lite folk her enda fordi det er en helt ny side. Kom tilbake senere for fullt fungerende videodating.
+            </p>
             
             <button class="btn-primary" onclick="acceptAge()">Godta (18+) & Start Appen</button>
             <button class="btn-info" onclick="toggleInfo(true)">📖 Skeptisk? Slik fungerer siden</button>
@@ -121,7 +121,6 @@ Testfase:Lite folk her enda fordi det er en helt ny side. Kom tilbake senere for
             <h1 style="color: #00d4ff;">💎 VIP Tilgang</h1>
             <p style="margin-bottom: 10px;">Du har brukt opp dine 25 gratis chatter.</p>
             
-            <!-- Oppdatert til realistisk premium-pris -->
             <div style="background: rgba(88, 204, 2, 0.1); border: 1px solid #58cc02; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
                 <p style="color: #fff; font-size: 14px; margin-bottom: 5px; font-weight: bold;">🔥 Tidsbegrenset Lanseringstilbud 🔥</p>
                 <p style="color: #58cc02; font-size: 26px; font-weight: 900; margin-bottom: 0;">Kun 149,- / md</p>
