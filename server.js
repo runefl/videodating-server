@@ -98,7 +98,7 @@ const APP_HTML = `
             </p>
             
             <button class="btn-primary" onclick="acceptAge()">Godta (18+) & Start Appen</button>
-            <button class="btn-info" onclick="toggleInfo(true)">📖 Slik utfordrer vi Tinder</button>
+            <button class="btn-info" onclick="toggleInfo(true)">📖 Slik fungerer det!!</button>
         </div>
     </div>
 
