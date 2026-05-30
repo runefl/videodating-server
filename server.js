@@ -1,4 +1,4 @@
-const express = require('express');
+rkbt-pnwp-yphd-hofe-wxkfconst express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
@@ -55,7 +55,7 @@ const APP_HTML = `
     <div id="ageOverlay" class="overlay">
         <div class="box">
             <h1>🔞 18-Årsgrense</h1>
-            <p>Dette er en live video-tjeneste. Du må være over 18 år for å bruke den. Upassende adferd fører til permanent utestengelse.</p>
+            <p>Dette er en live video-tjeneste. Du må være over 18 år for å bruke den. Upassende adferd fører til permanent utestengelse.Betalingslink funker ikke enda fordi det er frremdeles i test fase så du får bare 25 chatter.kom tilbake senere</p>
             <div style="background: rgba(88,204,2,0.1); border: 1px solid #58cc02; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
                 <p style="color: #58cc02; font-weight: bold; margin: 0; font-size: 18px;">🎁 Velkomstgave!</p>
                 <p style="color: white; margin: 5px 0 0 0; font-size: 14px;">Du får 25 gratis chatter for å teste appen.</p>
