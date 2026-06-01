@@ -10,7 +10,31 @@ const APP_HTML = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Videodating</title>
+    
+    <title>Videodating - Rett innpå video! Norsk Dating</title>
+    <meta name="description" content="Møt menn og kvinner direkte på video. Ingen falske profiler, ingen swiping. Prøv gratis videodating i Norge i dag. Ubegrenset tilgang for 149 kr/mnd.">
+    <meta name="keywords" content="videodating, dating norge, videochat, datingapp, alternativ til tinder, live dating, finn kjæreste, møt single">
+    <meta property="og:title" content="Videodating - Rett innpå video">
+    <meta property="og:description" content="Opplev ekte videodating. Ingen swiping, bare ekte kjemi. Prøv 25 chatter helt gratis!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.videodating.no/">
+    
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Videodating Norge",
+      "applicationCategory": "SocialNetworkingApplication",
+      "description": "Norges plattform for live videodating. Gå rett på video uten matching.",
+      "offers": {
+        "@type": "Offer",
+        "price": "149.00",
+        "priceCurrency": "NOK",
+        "description": "Månedsabonnement for ubegrenset dating"
+      }
+    }
+    </script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
         
@@ -80,7 +104,7 @@ const APP_HTML = `
     <div id="ageOverlay" class="overlay">
         <div class="box">
             <h1 style="color: white; font-size: 26px; margin-bottom: 5px;">Velkommen 👋</h1>
-            <p style="color: #58cc02; font-weight: bold; font-size: 16px; margin-bottom: 20px;">🚀 Rett på video –FUNKER BARE PÅ PC.IKKE PÅ MOBIL: Trenger ikke match først. Full tilgang når testperiode er over. 149 kr/mnd. Ingen skjulte kostnader som hos andre.</p>
+            <p style="color: #58cc02; font-weight: bold; font-size: 16px; margin-bottom: 20px;">🚀 Rett på video – Trenger ikke match først. Full tilgang når testperiode er over. 149 kr/mnd. Ingen skjulte kostnader som hos andre.</p>
             
             <div class="gender-section">
                 <p class="title">Jeg er:</p>
@@ -90,7 +114,6 @@ const APP_HTML = `
                 </div>
             </div>
 
-            <!-- Lovlig, trygg og profesjonell advarsel -->
             <p style="font-size: 14px; color: #ff4d4d; font-weight: 600; background: rgba(255, 77, 77, 0.1); padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 77, 77, 0.25); line-height: 1.6; margin-bottom: 20px;">
                 Live video-tjeneste med 18-årsgrense. Upassende adferd fører til umiddelbar og permanent utestengelse fra plattformen (IP-blokkering).<br><br>
                 Testfase: Lite folk her enda fordi det er en helt ny side. Kom tilbake senere for fullt fungerende videodating.<br><br>
