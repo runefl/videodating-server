@@ -211,19 +211,6 @@ const APP_HTML = `
             if(!isVIP) document.getElementById('matchCounter').innerText = "Gratis igjen: " + freeMatchesLeft;
         }
 
-        function checkVip() {
-            if (document.getElementById('vipCodeInput').value.toUpperCase().trim() === "NORGE2026") {
-                localStorage.setItem('isVIP', 'true');
-                isVIP = true;
-                document.getElementById('paywallOverlay').classList.add('hidden');
-                ui.matchCounter.innerText = "💎 VIP";
-                ui.matchCounter.style.color = "#00d4ff";
-                finnMatch();
-            } else {
-                document.getElementById('vipError').style.display = 'block';
-            }
-        }
-
         const socket = io();
         let localStream, peerConnection, partnerId = null, timerInterval, timeLeft = 15, hasRequestedTime = false;
 
@@ -234,6 +221,26 @@ const APP_HTML = `
             status: document.getElementById('status'), timer: document.getElementById('timer'),
             matchCounter: document.getElementById('matchCounter')
         };
+
+        // --- VIP SJEKK MOT SERVER ---
+        function checkVip() {
+            const code = document.getElementById('vipCodeInput').value.toUpperCase().trim();
+            socket.emit('check_vip_code', code);
+        }
+
+        socket.on('vip_success', () => {
+            localStorage.setItem('isVIP', 'true');
+            isVIP = true;
+            document.getElementById('paywallOverlay').classList.add('hidden');
+            ui.matchCounter.innerText = "💎 VIP";
+            ui.matchCounter.style.color = "#00d4ff";
+            document.getElementById('vipError').style.display = 'none';
+            finnMatch();
+        });
+
+        socket.on('vip_error', () => {
+            document.getElementById('vipError').style.display = 'block';
+        });
 
         const rtcConfig = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }, { urls: 'stun:stun1.l.google.com:19302' }] };
 
@@ -383,14 +390,14 @@ const APP_HTML = `
 </html>
 `;
 
-// Tvinger serveren til å sende app-designet uansett hva
 app.get('*', (req, res) => {
     res.send(APP_HTML);
 });
 
-// --- SMART MATCHMAKING SERVER (KUN HETERO-MATCHING) ---
+// --- SMART MATCHMAKING SERVER ---
 let queue = [];
 const bannedIPs = new Set();
+const VIP_PASSWORD = "NORGE2026"; // Her ligger passordet trygt beskyttet på serveren
 
 io.on('connection', (socket) => {
     const clientIp = socket.handshake.headers['x-forwarded-for']?.split(',')[0] || socket.request.connection?.remoteAddress;
@@ -402,19 +409,25 @@ io.on('connection', (socket) => {
     }
     socket.ip = clientIp;
 
+    // Sjekker VIP-passord skjult fra brukeren
+    socket.on('check_vip_code', (code) => {
+        if (code === VIP_PASSWORD) {
+            socket.emit('vip_success');
+        } else {
+            socket.emit('vip_error');
+        }
+    });
+
     // Når en bruker trykker "Søk etter match"
     socket.on('find_match', (prefs) => {
         cleanupMatch(socket);
         queue = queue.filter(u => u.id !== socket.id);
 
-        // Lagrer hvem de er
-        socket.gender = prefs.gender; // 'M' eller 'F'
+        socket.gender = prefs.gender;
 
-        // Finn en partner i køen av motsatt kjønn
         let matchIndex = queue.findIndex(u => u.gender !== socket.gender);
 
         if (matchIndex !== -1) {
-            // Vi fant en match! Plukk dem ut av køen
             const partner = queue.splice(matchIndex, 1)[0];
             
             socket.currentPartner = partner.id;
@@ -425,7 +438,6 @@ io.on('connection', (socket) => {
             socket.emit('match_found', { initiator: true, partnerId: partner.id });
             partner.emit('match_found', { initiator: false, partnerId: socket.id });
         } else {
-            // Ingen av motsatt kjønn ledig akkurat nå. Setter i køen.
             queue.push(socket);
         }
     });
