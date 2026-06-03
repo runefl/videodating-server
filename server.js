@@ -494,4 +494,4 @@ io.on('connection', (socket) => {
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
     console.log(`🚀 Hetero-Match Server live på port ${PORT}`);
-});</details>
+});
